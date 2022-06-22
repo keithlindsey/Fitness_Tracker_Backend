@@ -24,8 +24,10 @@ describe('Database', () => {
     describe('createUser({ username, password })', () => {
       beforeAll(async () => {
         userToCreateAndUpdate = await createUser(userCredentials);
+        console.log("$$$$$$$",userToCreateAndUpdate);
         const {rows} = await client.query(`SELECT * FROM users WHERE username = $1`, [userCredentials.username]);
         queriedUser = rows[0];
+        console.log(queriedUser);
       })
       it('Creates the user', async () => {
         expect(userToCreateAndUpdate.username).toBe(userCredentials.username);
