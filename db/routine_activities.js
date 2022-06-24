@@ -35,8 +35,19 @@ async function addActivityToRoutine({
         throw error;
     }
 }
-// async function getRoutineActivitiesByRoutine({id}) {
-// }
+async function getRoutineActivitiesByRoutine({ id }) {
+    try {
+        const { rows:  activities  } = await client.query(`
+        SELECT "activityId"
+        FROM routine_activities
+        WHERE "routineId"=$1
+        `, [id])
+
+        return activities
+    } catch (error) {
+        throw error
+    }
+}
 
 async function updateRoutineActivity ({id, count, duration}) {
     try {
@@ -81,7 +92,7 @@ async function destroyRoutineActivity(id) {
 module.exports = {
   getRoutineActivityById,
   addActivityToRoutine,
-//   getRoutineActivitiesByRoutine,
+  getRoutineActivitiesByRoutine,
   updateRoutineActivity,
   destroyRoutineActivity,
 //   canEditRoutineActivity,

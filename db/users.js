@@ -66,8 +66,9 @@ async function getUserByUsername(username) {
         FROM users
         WHERE username=$1;
         `,[username])
-
+        console.log("anthy*******************")
         return user;
+        
     } catch (error) {
         throw error;
     }
