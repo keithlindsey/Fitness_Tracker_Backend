@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET = "neverTell" } = process.env;
 
 const { getUserByUsername, getUser, createUser, getUserById, getPublicRoutinesByUser } = require("../db");
-// const { requireUser } = require("./utils");
+const { requireUser } = require("./utils");
 
 
 usersRouter.post("/register", async(request, response, next) => {
@@ -23,7 +23,7 @@ usersRouter.post("/register", async(request, response, next) => {
         if (_user) {
           next({
             name: 'UserExistsError',
-            message: 'A user by that username already exists'
+            message: 'dont break'
           });
         } else if (password.length < 8) {
           next({
@@ -47,6 +47,70 @@ usersRouter.post("/register", async(request, response, next) => {
         next(error)
       }
     })
+
+
+    usersRouter.post('/login', async (req,res, next)=>{
+      const {username, password} = req.body;
+      console.log("Helping riley with",req.body);
+  
+      if (!username || !password) {
+        next ({
+          name: "MissingCredentialError",
+          message: "please supply both a username and password"
+        });
+      }
+  
+       try {
+         const user = await getUser({username,password});
+          console.log("we got there","******************************");
+         if (!user){
+          next({
+            name:'IncorrectCredentialError',
+            message: 'Username or password is incorrect'
+          });
+        
+  
+         } else {
+              console.log(user),"This is the HOMIE____________________________";
+          const token = jwt.sign({ id: user.id, username: username}, JWT_SECRET);
+           res.send({message:"you're logged in!", token: token});
+      
+         }
+       }catch (error){
+         console.log(error);
+         next(error);
+       }
+  })
+
+  usersRouter.get('/me',requireUser, async (req, res, next)=>{
+    //  const {username} = req.params;
+
+     try {
+          // const _user = await getUserByUsername({username})
+          res.send(req.user);
+     } catch (error) {
+       next(error);
+     }
+
+  })
+  
+
+
+  usersRouter.get('/:username/routines', async (req, res, next)=>{
+        const {username} = req.params;
+
+        try {
+          const _user = await getPublicRoutinesByUser({username})
+
+          res.send(_user);
+        } catch (error) {
+          next(error);
+        }
+
+
+
+
+  })
 
 
 
