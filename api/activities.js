@@ -24,20 +24,28 @@ const {  getAllActivities,
   updateRoutine,
   } = require("../db")
 
-     activitiesRouter.patch('/:activities', requireUser, async(req, res, next)=>{
-                    try {
-                        console.log("=================", req.user);
-                        console.log ("+++++++++++++++++++++++++++++++++",req.body);
-                        console.log("====================", req.user.id);
-                        console.log('---------------', req.params);
-                        
-                    } catch (error) {
-                        next(error);
-                    }
+
+  activitiesRouter.patch('/:activities', requireUser, async(req, res, next)=>{
+    const {activities} = req.params;
+    const {name, description} = req.body;
+
+    console.log("--------------", name);
+    try {
+        // console.log('---------------', req.params);
+        // console.log('-------------', req.body);
+
+          
+
+            const _updateActivity = await updateActivity({id: activities, name, description});
+                console.log("_updateActivity", _updateActivity );
+            res.send(_updateActivity);
+        
+    } catch (error) {
+        next(error);
+    }
 
 
-     })
-
+})
     
 
 
@@ -55,8 +63,7 @@ const {  getAllActivities,
 
 
     })
-    // POST /activities (*)
-    // ✕ Creates a new activity (5002 ms)
+    
 
         activitiesRouter.post('/', requireUser, async(req, res, next)=>{
          
@@ -82,7 +89,7 @@ const {  getAllActivities,
 
   activitiesRouter.get('/:activityId/routines', async(req, res, next)=>{
     // review the helper function from the DB
-        console.log(req.params,")))))))))))))))))))))))))))")
+        console.log(req.params,"llllllllllllll")
 
 
     try {
@@ -102,6 +109,8 @@ const {  getAllActivities,
         next(error);
     }
 })
+
+
 
 
 
