@@ -40,7 +40,23 @@ routinesRouter.post("/", requireUser, async(req, res, next) => {
        next(error);
     }
 });
+routinesRouter.delete('/:routineId', requireUser, async(req, res, next)=>{
+           
+    try {
+        console.log(req.params, "aaaaaaaa");
+        // console.log(re.body,"aaaaaaaaaaaq")
+        const {routineId} = req.params;
+        console.log(routineId,"bitch");
 
+        const _deletedRoutine = await destroyRoutine(routineId)
+                console.log(_deletedRoutine,"aaaaaaa");
+        res.send(_deletedRoutine);
+    } catch (error) {
+        next(error);
+    }
+
+
+})
 
 
 
