@@ -24,8 +24,63 @@ const {  getAllActivities,
   updateRoutine,
   } = require("../db")
 
+     activitiesRouter.patch('/:activities', requireUser, async(req, res, next)=>{
+                    try {
+                        console.log("=================", req.user);
+                        console.log ("+++++++++++++++++++++++++++++++++",req.body);
+                        console.log("====================", req.user.id);
+                        console.log('---------------', req.params);
+                        
+                    } catch (error) {
+                        next(error);
+                    }
 
-  apiRouter.use('/:activityId/routines', async(req, res, next)=>{
+
+     })
+
+    
+
+
+
+    activitiesRouter.get("/",async(req, res, next)=>{
+                console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+            try {
+                const _activities = await getAllActivities();
+
+                res.send(_activities)
+            } catch (error) {
+                throw error;
+            }
+
+
+
+    })
+    // POST /activities (*)
+    // ✕ Creates a new activity (5002 ms)
+
+        activitiesRouter.post('/', requireUser, async(req, res, next)=>{
+         
+
+            
+
+            try {
+                
+                const _newRoutine = await createActivity(req.body);
+
+                res.send(_newRoutine);
+                
+            } catch (error) {
+                next(error);
+            }
+
+
+        })
+
+       
+
+
+
+  activitiesRouter.get('/:activityId/routines', async(req, res, next)=>{
     // review the helper function from the DB
         console.log(req.params,")))))))))))))))))))))))))))")
 
