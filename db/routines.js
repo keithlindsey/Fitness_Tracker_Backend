@@ -1,6 +1,6 @@
 const client = require('./client');
 const { attachActivitiesToRoutines } = require("./activities");
-const util = require("./util");
+// const util = require("./util");
 
 async function getRoutineById(id) {
     try {
@@ -68,7 +68,7 @@ async function getAllRoutinesByUser({username}) {
       WHERE username = $1
       AND "isPublic" = true
       `, [username]);
-  
+          console.log("ppppppppppppppp");
       return attachActivitiesToRoutines(routines);
     } catch (error) {
       throw error
@@ -125,28 +125,35 @@ async function createRoutine({
 }
 
 
+async function updateRoutine(fields) {
+  const { id } = fields;
+  delete fields.id;
 
-async function updateRoutine({id, ...fields}) {
-    try {
-      const toUpdate = {}
-      for(let column in fields) {
-        if(fields[column] !== undefined) toUpdate[column] = fields[column];
-      }
-      let routine;
-      if (util.dbFields(fields).insert.length > 0) {
-        const {rows} = await client.query(`
-            UPDATE routines 
-            SET ${ util.dbFields(toUpdate).insert }
-            WHERE id=${ id }
-            RETURNING *;
-        `, Object.values(toUpdate));
-        routine = rows[0];
-        return routine;
-      }
-    } catch (error) {
-      throw error;
-    }
+  const setString = Object.keys(fields)
+    .map((key, index) => `"${key}"=$${index + 1}`)
+    .join(", ");
+
+  try {
+    const {
+      rows: [updatedRoutine],
+    } = await client.query(
+      `
+            UPDATE routines
+            SET ${setString}
+            WHERE id = ${id}
+            RETURNING*;
+        `,
+      Object.values(fields)
+    );
+
+    return updatedRoutine;
+  } catch (error) {
+    throw error;
   }
+}
+
+
+
 
 
 

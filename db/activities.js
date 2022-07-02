@@ -42,7 +42,7 @@ async function getActivityByName(name){
 async function attachActivitiesToRoutines(routines) {
    
     const routinesToReturn = [...routines];
-    const binds = routines.map((_, index) => `$${index + 1}`).join(', ');
+    const joins = routines.map((_, index) => `$${index + 1}`).join(', ');
     const routineIds = routines.map(routine => routine.id);
     if (!routineIds?.length) return [];
     
@@ -52,7 +52,7 @@ async function attachActivitiesToRoutines(routines) {
         SELECT activities.*, routine_activities.duration, routine_activities.count, routine_activities.id AS "routineActivityId", routine_activities."routineId"
         FROM activities 
         JOIN routine_activities ON routine_activities."activityId" = activities.id
-        WHERE routine_activities."routineId" IN (${ binds });
+        WHERE routine_activities."routineId" IN (${ joins });
       `, routineIds);
   
       
@@ -82,7 +82,7 @@ async function createActivity({ name, description }) {
     }
 }
 
-// return the new activity
+
 async function updateActivity({ id, name, description }) {
 
     try {
