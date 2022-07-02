@@ -41,24 +41,47 @@ routinesRouter.post("/", requireUser, async(req, res, next) => {
 });
 
 
-routinesRouter.post('/:routineId/activities', async(req, res, next)=>{
-      
-        
+
+
+routinesRouter.post("/:routineId/activities", requiredNotSent({requiredParams: ['activityId', 'count', 'duration']}), async(req, res, next) => {
+    
+    const {activityId, count, duration} = req.body
+    const {routineId} = req.params; 
+
     try {
-const {activityId, count, duration} = req.body
-const {routineId}= req.params
-console.log(req.params, "777777777");
 
- const _new = await addActivityToRoutine({routineId, activityId, count, duration})
+        const _compRoutine = await getRoutineActivitiesByRoutine({id: routineId});
+        const _routineActivity = _compRoutine && _compRoutine.filter(_activity => _activity.activityId === activityId);
+        
+        
+        if (_routineActivity && _routineActivity.length){
+            next({
+                            name: 'RoutineActivityExistsError',
+                            message: "A routine_activity already exists"
+                          });
+        } else {
+            const _attachActivty = await addActivityToRoutine({routineId, activityId, count, duration});
+            if (_attachActivty){
+                res.send(_attachActivty);
+            } else {
+                next({
+                                  name: 'FailedToCreate',
+                                  message: "There was an error"
+                                });
+            }
+        }
+        
+    } catch (error) {
+        throw(error)
+        
+    }
 
-        console.log("jjjjjjjjj", _new);
- res.send(_new);
 
-} catch (error) {
-next(error)
-}
-})
 
+
+
+
+});
 
 
 

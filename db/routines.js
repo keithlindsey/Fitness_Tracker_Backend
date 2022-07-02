@@ -134,9 +134,7 @@ async function updateRoutine(fields) {
     .join(", ");
 
   try {
-    const {
-      rows: [updatedRoutine],
-    } = await client.query(
+    const {rows: [updatedRoutine],} = await client.query(
       `
             UPDATE routines
             SET ${setString}
