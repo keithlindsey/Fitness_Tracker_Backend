@@ -236,6 +236,8 @@ describe('API', () => {
     describe('PATCH /routine_activities/:routineActivityId (**)', () => {
       it('Updates the count or duration on the routine activity', async () => {
         const {data: respondedRoutineActivity} = await axios.patch(`${API_URL}/api/routine_activities/${routineActivityToCreateAndUpdate.id}`, newRoutineActivityData, { headers: {'Authorization': `Bearer ${token}`} });
+        console.log('respondedRoutineActivity keith', respondedRoutineActivity)
+        
         expect(respondedRoutineActivity.count).toEqual(newRoutineActivityData.count);
         expect(respondedRoutineActivity.duration).toEqual(newRoutineActivityData.duration);
         routineActivityToCreateAndUpdate = respondedRoutineActivity;
@@ -253,7 +255,11 @@ describe('API', () => {
     });
     describe('DELETE /routine_activities/:routineActivityId (**)', () => {
       it('Removes an activity from a routine, uses hard delete', async () => {
+
+
+        
         const {data: deletedRoutineActivity} = await axios.delete(`${API_URL}/api/routine_activities/${routineActivityToCreateAndUpdate.id}`, { headers: {'Authorization': `Bearer ${token}`} });
+       
         const shouldBeDeleted = await getRoutineActivityById(deletedRoutineActivity.id);
         expect(deletedRoutineActivity.id).toBe(routineActivityToCreateAndUpdate.id);
         expect(deletedRoutineActivity.count).toBe(routineActivityToCreateAndUpdate.count);

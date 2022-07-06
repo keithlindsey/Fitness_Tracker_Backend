@@ -1,6 +1,7 @@
+
 const express = require("express");
 const routine_activitiesRouter = express.Router();
-
+const {getRoutineById} = require("../db")
 
 const { getRoutineActivityById,
     addActivityToRoutine,
@@ -11,40 +12,82 @@ const { getRoutineActivityById,
 const { requireUser } = require("./utils");
 
 
+routine_activitiesRouter.delete('/:routineActivityId', requireUser, async(req, res, next)=>{
 
-routine_activitiesRouter.patch("/routineActivityId", requireUser, async( req, res, next)=>{
-try {
-    console.log("hello world");
-} catch (error) {
-    next(error)
-}
+    console.log("just do it damnit!!", req.params)
+    const routine = await getRoutineById(req.params.routineActivityId)
+    console.log(routine, "nike2");
+    console.log(req.user, "reebok");
+    // const {creatorId} = routine
+    // console.log (creatorId, "nike3");
 
+    try {
 
+        const _deleted = await destroyRoutineActivity(req.params.routineActivityId)
+            console.log(_deleted, "nike");
+        res.send(_deleted);
+        
+    } catch (error) {
+        
+    }
 })
 
-// routine_activitiesRouter.delete('/:routineActivityId',  requireUser,  async(req, res, next) => {
-//     console.log("YEs")
-//     res.send("A responses")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// routine_activitiesRouter.use('/', async(req, res, next)=>{
+//     console.log("wu tang");
 // })
 
 // routine_activitiesRouter.delete('/:routineActivityId', requireUser, async(req, res, next)=>{
+//         console.log(req.params.routineActivityId, "bradly")
+//     //  const user = req.user
+//     //  console.log(user, "keef");
+//     //  const _routine = getRoutineById(req.params.routineActivityId);
+//     //  console.log(_routine, "corey");
+     
+ 
          
-//     try {
+//     // console.log('hi')
+//     // try {
+     
+
+ 
+
+//     //     // if (user.id !== routine.creatorId){
+//     //     //     next(error)
+          
+
+//     //     // }
+//     //      const _deleted = destroyRoutineActivity(req.params.routineActivityId)
+ 
+//     //      res.send({success: true, ..._deleted})
+
+          
+
+//     // } catch (error) {
+//     //     console.log(error, "bbbbbbbbbb");
+//     //     next(error);
+//     // }
+
+
+// }
+// )
 
 
 
-//             const {routineActivityId} = req.params
-//             const _deleted = await destroyRoutineActivity(routineActivityId)
-//             console.log(_deleted, "vvvvvvvvvvv");
-//             res.send(routineActivityId);
-
-//     } catch (error) {
-//         console.log(error, "bbbbbbbbbb");
-//         next(error);
-//     }
-
-
-// })
 
 
 

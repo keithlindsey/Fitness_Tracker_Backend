@@ -105,6 +105,30 @@ routinesRouter.delete('/:routineId', requireUser, async(req, res, next)=>{
 })
 
 
+routinesRouter.patch('/:routineId', requireUser, requiredNotSent({requiredParams: ['name', 'goal', 'isPublic'], atLeastOne: true}), async (req, res, next) => {
+    const {routineId} = req.params;
+    const {isPublic, name, goal} = req.body;
+    const getRoutine = await getRoutineById(routineId);
+  
+    try {
+      
+      if(!getRoutine) {
+        next()
+      } else if(getRoutine.creatorId !== req.user.id) {
+        next();
+      } else {
+        const updatedRoutine = await updateRoutine({id: routineId, isPublic, name, goal});
+        if(updatedRoutine) {
+          res.send(updatedRoutine);
+        } else {
+          next()
+        }
+      }
+    } catch (error) {
+      next(error);
+    }
+  });
+
 
 
 

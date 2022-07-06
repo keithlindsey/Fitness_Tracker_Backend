@@ -2,11 +2,11 @@ const client = require('./client')
 
 async function getRoutineActivityById(id){
     try {
-        const {rows: routine_activity} = await client.query(`
+        const {rows: [routine_activity]} = await client.query(`
             SELECT * FROM routine_activities
             WHERE id=$1;
         `[id]);
-
+        console.log("kkkkkkkkkkkkkkkk", routine_activity);
         return routine_activity;
     } catch (error) {
         throw error
