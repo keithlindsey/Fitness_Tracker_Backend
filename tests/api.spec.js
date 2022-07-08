@@ -256,7 +256,7 @@ describe('API', () => {
     describe('DELETE /routine_activities/:routineActivityId (**)', () => {
       it('Removes an activity from a routine, uses hard delete', async () => {
 
-
+          
         
         const {data: deletedRoutineActivity} = await axios.delete(`${API_URL}/api/routine_activities/${routineActivityToCreateAndUpdate.id}`, { headers: {'Authorization': `Bearer ${token}`} });
        

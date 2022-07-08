@@ -11,10 +11,10 @@ function requireUser(req, res, next) {
   
 
 
-  // takes required parameters as an array, returns a middleware function that sends back a message if they're not present
+  
 const requiredNotSent = ({ requiredParams, atLeastOne = false }) => {
   return (req, res, next) => {
-    // for operations that need at least one param. Not all required.
+    
     if(atLeastOne) {
       let numParamsFound = 0;
       for(let param of requiredParams) {
@@ -31,7 +31,7 @@ const requiredNotSent = ({ requiredParams, atLeastOne = false }) => {
         next();
       }
     } else {
-      // figure out which ones are not defined, and return them
+     
       const notSent = [];
       for(let param of requiredParams) {
         if(req.body[param] === undefined) {

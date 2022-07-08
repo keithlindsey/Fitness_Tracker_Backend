@@ -7,27 +7,16 @@ const {getRoutineActivitiesByRoutine, addActivityToRoutine } = require("../db/ro
 
 
 routinesRouter.get("/", async (req, res, next)=>{
-
-    console.log("Dude we are having the ame pr");
-
     try {
         const _publicRoutines = await getAllPublicRoutines();
         res.send(_publicRoutines);
     } catch (error) {
         next(error);
     }
-
-
-
-
 })
 
 
 routinesRouter.post("/", requireUser, async(req, res, next) => {
-
-    console.log("Ffffffffffffff", req.body);
-    console.log(req.params,"gggggggggggggg");
-    console.log(req.user,'hhhhhhhhhhhhhhhh');
     const { name, goal, isPublic } = req.body;
     const creatorId = req.user.id; 
 
@@ -57,7 +46,7 @@ routinesRouter.post("/:routineId/activities", requiredNotSent({requiredParams: [
         if (_routineActivity && _routineActivity.length){
             next({
                             name: 'RoutineActivityExistsError',
-                            message: "A routine_activity already exists"
+                            message: "already exists"
                           });
         } else {
             const _attachActivty = await addActivityToRoutine({routineId, activityId, count, duration});
@@ -75,12 +64,6 @@ routinesRouter.post("/:routineId/activities", requiredNotSent({requiredParams: [
         throw(error)
         
     }
-
-
-
-
-
-
 });
 
 
@@ -89,19 +72,13 @@ routinesRouter.post("/:routineId/activities", requiredNotSent({requiredParams: [
 routinesRouter.delete('/:routineId', requireUser, async(req, res, next)=>{
            
     try {
-        console.log(req.params, "aaaaaaaa");
-        // console.log(re.body,"aaaaaaaaaaaq")
-        const {routineId} = req.params;
-        console.log(routineId,"bitch");
-
-        const _deletedRoutine = await destroyRoutine(routineId)
-                console.log(_deletedRoutine,"aaaaaaa");
+         const {routineId} = req.params;
+          const _deletedRoutine = await destroyRoutine(routineId)
+                
         res.send(_deletedRoutine);
     } catch (error) {
         next(error);
     }
-
-
 })
 
 

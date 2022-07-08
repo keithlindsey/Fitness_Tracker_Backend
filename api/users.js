@@ -2,24 +2,22 @@
 
 const express = require("express");
 const usersRouter = express.Router();
-
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET = "neverTell" } = process.env;
-
 const { getUserByUsername, getUser, createUser, getUserById, getPublicRoutinesByUser } = require("../db");
 const { requireUser } = require("./utils");
 
 
-usersRouter.post("/register", async(request, response, next) => {
+usersRouter.post("/register", async(req, res, next) => {
     
-        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        
     try {
-        const { username, password } = request.body;
-            console.log(username, password, "!!!!!!!!!!!!!!!!!!!!");
+        const { username, password } = req.body;
+            
         const _user = await getUserByUsername(username);
-            console.log(_user, "@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        console.log("%%%%%%%%%%%%%%%%%%");
+            
+        
         if (_user) {
           next({
             name: 'UserExistsError',
@@ -36,11 +34,11 @@ usersRouter.post("/register", async(request, response, next) => {
           if (!user) {
             next({
               name: 'UserCreationError',
-              message: 'There was a problem registering you. Please try again.',
+              message: 'There was a problem. Please try again.',
             });
           } else {
             const token = jwt.sign({id: user.id, username: user.username}, JWT_SECRET);
-            response.send({ user, message: "you're signed up!", token });
+            res.send({ user, message: "you're signed up!", token });
           }
         }
       } catch (error) {
@@ -51,7 +49,7 @@ usersRouter.post("/register", async(request, response, next) => {
 
     usersRouter.post('/login', async (req,res, next)=>{
       const {username, password} = req.body;
-      console.log("Helping riley with",req.body);
+      
   
       if (!username || !password) {
         next ({
@@ -62,7 +60,7 @@ usersRouter.post("/register", async(request, response, next) => {
   
        try {
          const user = await getUser({username,password});
-          console.log("we got there","******************************");
+          
          if (!user){
           next({
             name:'IncorrectCredentialError',
@@ -71,7 +69,7 @@ usersRouter.post("/register", async(request, response, next) => {
         
   
          } else {
-              console.log(user),"This is the HOMIE____________________________";
+              
           const token = jwt.sign({ id: user.id, username: username}, JWT_SECRET);
            res.send({message:"you're logged in!", token: token});
       
@@ -83,10 +81,10 @@ usersRouter.post("/register", async(request, response, next) => {
   })
 
   usersRouter.get('/me',requireUser, async (req, res, next)=>{
-    //  const {username} = req.params;
+    
 
      try {
-          // const _user = await getUserByUsername({username})
+          
           res.send(req.user);
      } catch (error) {
        next(error);

@@ -6,7 +6,7 @@ async function getRoutineActivityById(id){
             SELECT * FROM routine_activities
             WHERE id=$1;
         `[id]);
-        console.log("kkkkkkkkkkkkkkkk", routine_activity);
+        
         return routine_activity;
     } catch (error) {
         throw error
@@ -14,12 +14,7 @@ async function getRoutineActivityById(id){
 }
 
 
-async function addActivityToRoutine({
-    routineId,
-    activityId,
-    count,
-    duration
-}) {
+async function addActivityToRoutine({routineId,activityId,count,duration}) {
 
     try {
         const { rows: [routine_activity] } = await client.query(`
@@ -86,11 +81,7 @@ async function destroyRoutineActivity(id) {
     }
 }
 
-// async function canEditRoutineActivity(routineActivityId, userId) {
 
-
-
-// }
 
 module.exports = {
   getRoutineActivityById,
@@ -98,5 +89,5 @@ module.exports = {
   getRoutineActivitiesByRoutine,
   updateRoutineActivity,
   destroyRoutineActivity,
-//   canEditRoutineActivity,
+
 };

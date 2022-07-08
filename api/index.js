@@ -1,20 +1,19 @@
 const client = require("../db");
 const express = require("express");
 const apiRouter = express.Router();
-
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET = "neverTell" } = process.env;
 const { getUserById } = require("../db");
 
 
-apiRouter.use(async (request, response, next) => {
-    console.log("hello dummy!!!!!!!!!");
+apiRouter.use(async (req, res, next) => {
+    
     const prefix = 'Bearer ';
-    const auth = request.header('Authorization');
+    const auth = req.header('Authorization');
     
     if (!auth) { 
       next();
-        console.log(auth)
+        
     } else if (auth.startsWith(prefix)) {
       const token = auth.slice(prefix.length);
       
@@ -22,7 +21,7 @@ apiRouter.use(async (request, response, next) => {
         const { id } = jwt.verify(token, JWT_SECRET);
         
         if (id) {
-          request.user = await getUserById(id);
+          req.user = await getUserById(id);
           next();
         }
       } catch (error) {
@@ -36,16 +35,16 @@ apiRouter.use(async (request, response, next) => {
     }
   });
   
-  apiRouter.use((request, response, next) => {
-    if (request.user) {
-      console.log("User is set:", request.user);
+  apiRouter.use((req, res, next) => {
+    if (req.user) {
+      
     }
     next();
   });
 
 
-apiRouter.get("/health", async(request, response, next) => {
-    response.send({
+apiRouter.get("/health", async(req, res, next) => {
+    res.send({
         message: "Its Healthy"
     })
 })
